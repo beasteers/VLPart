@@ -1,4 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
+import os
 import logging
 from typing import Callable, Dict, List, Optional, Tuple, Union
 import math
@@ -137,6 +138,7 @@ class VLMFastRCNNOutputLayers(FastRCNNOutputLayers):
     @classmethod
     def from_config(cls, cfg, input_shape):
         ret = super().from_config(cfg, input_shape)
+        ROOT=lambda *f: os.path.join(cfg.SRC_ROOT, *f)
         ret.update({
             'sync_caption_batch': cfg.MODEL.SYNC_CAPTION_BATCH,
             'use_sigmoid_ce': cfg.MODEL.ROI_BOX_HEAD.USE_SIGMOID_CE,
@@ -158,7 +160,7 @@ class VLMFastRCNNOutputLayers(FastRCNNOutputLayers):
             'part_loss_type': cfg.MODEL.ROI_BOX_HEAD.PART_LOSS_TYPE,
             'ignore_zero_cats_group': cfg.MODEL.ROI_BOX_HEAD.IGNORE_ZERO_CATS_GROUP,
             'use_fed_loss_group': cfg.MODEL.ROI_BOX_HEAD.USE_FED_LOSS_GROUP,
-            'cat_freq_path_group': cfg.MODEL.ROI_BOX_HEAD.CAT_FREQ_PATH_GROUP,
+            'cat_freq_path_group': [ROOT(f) for f in cfg.MODEL.ROI_BOX_HEAD.CAT_FREQ_PATH_GROUP],
         })
         if ret['use_zeroshot_cls_group']:
             ret['zeroshot_cls'] = ZeroShotClassifierGroup(cfg, input_shape)

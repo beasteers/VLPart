@@ -1,4 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
+import os
 import numpy as np
 import torch
 from torch import nn
@@ -57,10 +58,11 @@ class ZeroShotClassifierGroup(nn.Module):
 
     @classmethod
     def from_config(cls, cfg, input_shape):
+        ROOT=lambda *f: os.path.join(cfg.SRC_ROOT, *f)
         return {
             'input_shape': input_shape,
-            'zs_weight_path_group': cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_PATH_GROUP,
-            'zs_weight_inference_path': cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_INFERENCE_PATH,
+            'zs_weight_path_group': [ROOT(f) for f in cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_PATH_GROUP],
+            'zs_weight_inference_path': ROOT(cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_INFERENCE_PATH),
             'zs_weight_dim': cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_DIM,
             'use_bias': cfg.MODEL.ROI_BOX_HEAD.USE_BIAS,
             'norm_weight': cfg.MODEL.ROI_BOX_HEAD.NORM_WEIGHT,

@@ -7,6 +7,7 @@ def add_vlpart_config(cfg):
     """
     Add config for VLPart.
     """
+    cfg.SRC_ROOT = '.'
     # dino
     cfg.DINO = CN()
     cfg.DINO.MODEL_TYPE = 'dino_vits8'
